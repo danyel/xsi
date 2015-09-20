@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+
+    <rabbit:template id="messaging.template"
+                     channel-transacted="false"
+                     connection-factory="messaging.connection.factory"/>
+
+    <bean id="messaging.connection.recovery"
+          class="com.rabbitmq.client.ConnectionFactory">
+        <property name="automaticRecoveryEnabled" value="true"/>
+    </bean>
+
+    <bean id="messaging.connection.factory"
+          class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
+        <constructor-arg name="rabbitConnectionFactory" ref="messaging.connection.recovery"/>
+        <property name="host" value="${amqp.host}"/>
+        <property name="port" value="${amqp.port}"/>
+        <property name="username" value="${amq.username}"/>
+        <property name="password" value="${amq.password}"/>
+        <property name="virtualHost" value="${amq.virtual.host}"/>
+        <property name="channelCacheSize" value="25"/>
+        <property name="publisherConfirms" value="false"/>
+        <property name="publisherReturns" value="false"/>
+    </bean>
+
+    <bean id="messaging.security.system.user"
+          class="be.urpi.software.xsi.core.messaging.impl.service.SystemUserService"/>
+
+    <bean id="messaging.transaction.manager"
+          class="org.springframework.amqp.rabbit.transaction.RabbitTransactionManager">
+        <property name="connectionFactory" ref="messaging.connection.factory"/>
+    </bean>
+
+    <bean id="messaging.handler.error"
+          class="be.urpi.software.xsi.core.messaging.impl.handler.ErrorHandler"/>
+
+    <bean id="messaging.recoverer"
+          class="org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer"/>
+
+    <bean id="messaging.generator.key"
+          class="be.urpi.software.xsi.core.messaging.impl.generator.BodyBasesKeyGenerator"/>
+
+    <bean id="messaging.retry.interceptor.operations"
+          class="org.springframework.amqp.rabbit.config.StatefulRetryOperationsInterceptorFactoryBean">
+        <property name="messageKeyGenerator" ref="messaging.generator.key"/>
+        <property name="messageRecoverer" ref="messaging.recoverer"/>
+    </bean>
+
+    <util:list id="messaging.advice.chain" value-type="org.aopalliance.aop.Advice">
+        <ref bean="messaging.retry.interceptor.operations"/>
+    </util:list>
+
+    <bean id="messaging.policy.simple" class="org.springframework.retry.policy.SimpleRetryPolicy">
+        <property name="maxAttempts" value="4"/>
+    </bean>
+
+    <bean id="messaging.policy.backoff"
+          class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+        <property name="initialInterval" value="1000"/>
+        <property name="maxInterval" value="600"/>
+        <property name="multiplier" value="2"/>
+    </bean>
+
+    <bean id="messaging.template.retry"
+          class="org.springframework.retry.support.RetryTemplate">
+        <property name="backOffPolicy" ref="messaging.policy.backoff"/>
+        <property name="retryPolicy" ref="messaging.policy.simple"/>
+    </bean>
+
+    <bean id="messaging.listener.abstract"
+          class="org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer"
+          abstract="true">
+        <property name="connectionFactory" ref="messaging.connection.factory"/>
+        <property name="transactionManager" ref="messaging.transaction.manager"/>
+        <property name="channelTransacted" value="true"/>
+        <property name="acknowledgeMode" value="AUTO"/>
+        <property name="concurrentConsumers" value="5"/>
+        <property name="recoveryInterval" value="2000"/>
+        <property name="errorHandler" ref="messaging.handler.error"/>
+        <property name="adviceChain" ref="messaging.advice.chain"/>
+    </bean>
+
+    <bean id="messaging.service.semaphore"
+          class="be.urpi.software.xsi.core.messaging.impl.service.SemaphoreServiceImpl"/>
+
+    <bean id="messaging.consumer.abstract"
+          class="be.urpi.software.xsi.core.messaging.impl.consumer.AbstractConsumer"
+          abstract="true">
+        <property name="semaphoreService" ref="messaging.service.semaphore"/>
+        <property name="userService" ref="messaging.security.system.user"/>
+    </bean>
+
+    <bean id="messaging.producer.abstract"
+          class="be.urpi.software.xsi.core.messaging.impl.producer.AbstractProducer"
+          abstract="true">
+        <property name="messagingTemplate" ref="messaging.template"/>
+        <property name="retryTemplate" ref="messaging.template.retry"/>
+    </bean>
+</beans>
