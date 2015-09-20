@@ -9,8 +9,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>be.urpi.software.xsi.command</groupId>
     <artifactId>be.urpi.software.xsi.command.rest</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>be.urpi.software.xsi.command</groupId>
+            <artifactId>be.urpi.software.xsi.command.model</artifactId>
+        </dependency>
+    </dependencies>
 </project>

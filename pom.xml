@@ -58,9 +58,10 @@
             <artifactId>spring-aop</artifactId>
         </dependency>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
-            <!--project-->
+            <!-- project -->
             <dependency>
                 <groupId>be.urpi.software.xsi.core</groupId>
                 <artifactId>be.urpi.software.xsi.core.mq</artifactId>
@@ -91,41 +92,43 @@
                 <artifactId>be.urpi.software.xsi.query.rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <!--third party-->
-            <dependency>
-                <groupId>org.springframework.amqp</groupId>
-                <artifactId>spring-rabbit</artifactId>
-                <version>1.5.0.RELEASE</version>
-            </dependency>
+            <!-- third party -->
+            <!-- codehaus -->
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-mapper-asl</artifactId>
                 <version>1.9.13</version>
             </dependency>
+            <!-- spring -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>4.2.1.RELEASE</version>
+                <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
-                <version>4.2.1.RELEASE</version>
+                <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-expression</artifactId>
-                <version>4.2.1.RELEASE</version>
+                <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aspects</artifactId>
-                <version>4.2.1.RELEASE</version>
+                <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
-                <version>4.2.1.RELEASE</version>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
@@ -133,10 +136,28 @@
                 <version>3.2.5.RELEASE</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.amqp</groupId>
+                <artifactId>spring-rabbit</artifactId>
+                <version>1.5.0.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-jpa</artifactId>
+                <version>1.7.1.RELEASE</version>
+            </dependency>
+            <!-- persistence -->
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>1.0.0.Final</version>
+            </dependency>
+            <!-- aspect -->
+            <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
                 <version>1.8.4</version>
             </dependency>
+            <!-- logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -156,7 +177,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
-                <version>4.2.1.RELEASE</version>
+                <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -170,4 +191,8 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <properties>
+        <org.springframework.version>4.2.1.RELEASE</org.springframework.version>
+    </properties>
 </project>
