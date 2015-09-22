@@ -1,5 +1,6 @@
 package be.urpi.software.xsi.command.rest.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,6 @@ public class IndexController {
 
     @RequestMapping(value = "/environment", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     ResponseEntity env(){
-        return new ResponseEntity<>(environment.getActiveProfiles()[0], HttpStatus.OK);
+        return new ResponseEntity<>(StringUtils.join(environment.getActiveProfiles(), ","), HttpStatus.OK);
     }
 }

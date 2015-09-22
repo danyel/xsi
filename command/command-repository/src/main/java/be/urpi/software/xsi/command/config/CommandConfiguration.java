@@ -23,7 +23,7 @@ import java.util.Properties;
 @Configuration
 @Import(value = {CoreCommandConfiguration.class})
 @EnableJpaRepositories(basePackages = {"be.urpi.software.xsi.command.*.repository"})
-@ComponentScan(basePackages = {"be.urpi.software.xsi.command.*.consumer", "be.urpi.software.xsi.command.*.producer"})
+@ComponentScan(basePackages = {"be.urpi.software.xsi.command.rest.consumer", "be.urpi.software.xsi.command.rest.producer"})
 @EnableTransactionManagement
 public class CommandConfiguration {
     @Autowired

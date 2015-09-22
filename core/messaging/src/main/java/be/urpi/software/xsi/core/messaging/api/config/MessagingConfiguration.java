@@ -30,15 +30,15 @@ import static org.springframework.amqp.core.AcknowledgeMode.AUTO;
 
 @Configuration
 public class MessagingConfiguration {
-    @Value("${amqp.host}")
+    @Value("${amqp.host:localhost}")
     private String host;
-    @Value("${amqp.port}")
-    private int port;
-    @Value("${amqp.username}")
+    @Value("${amqp.port:15342}")
+    private String port;
+    @Value("${amqp.username:guest}")
     private String username;
-    @Value("${amqp.password}")
+    @Value("${amqp.password:guest}")
     private String password;
-    @Value("${amq.virtual.host}")
+    @Value("${amq.virtual.host:test}")
     private String virtualHost;
 
     @Bean(name = "messaging.security.system.user")
@@ -47,8 +47,10 @@ public class MessagingConfiguration {
     }
 
     @Bean(name = "messaging.transaction.manager")
-    RabbitTransactionManager messagingTransactionManager() {
-        return new RabbitTransactionManager();
+    RabbitTransactionManager messagingTransactionManager(CachingConnectionFactory connectionFactory) {
+        final RabbitTransactionManager rabbitTransactionManager = new RabbitTransactionManager();
+        rabbitTransactionManager.setConnectionFactory(connectionFactory);
+        return rabbitTransactionManager;
     }
 
 
@@ -58,7 +60,7 @@ public class MessagingConfiguration {
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
         cachingConnectionFactory.setHost(host);
-        cachingConnectionFactory.setPort(port);
+        cachingConnectionFactory.setPort(new Integer(12345));
         cachingConnectionFactory.setVirtualHost(virtualHost);
         cachingConnectionFactory.setChannelCacheSize(25);
         cachingConnectionFactory.setPublisherConfirms(false);

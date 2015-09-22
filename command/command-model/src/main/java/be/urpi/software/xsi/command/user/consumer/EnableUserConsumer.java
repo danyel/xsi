@@ -6,11 +6,8 @@ import be.urpi.software.xsi.command.user.metadata.EnableUser;
 import be.urpi.software.xsi.command.user.repository.UserRepository;
 import be.urpi.software.xsi.core.command.impl.consumer.CommandConsumer;
 
-import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
 
-@Component
 public class EnableUserConsumer extends CommandConsumer<EnableUser, EnableUserMessage> {
     @Resource(name = UserRepository.NAME)
     private UserRepository userRepository;

@@ -11,6 +11,28 @@
     <packaging>war</packaging>
     <artifactId>be.urpi.software.xsi.ui.webapp</artifactId>
 
+    <profiles>
+        <profile>
+            <id>production</id>
+            <dependencies>
+                <dependency>
+                    <groupId>be.urpi.software.xsi.command</groupId>
+                    <artifactId>be.urpi.software.xsi.command.repository</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>stub</id>
+            <dependencies>
+                <dependency>
+                    <groupId>be.urpi.software.xsi.command</groupId>
+                    <artifactId>be.urpi.software.xsi.command.model.stub</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -23,6 +45,10 @@
         <dependency>
             <groupId>be.urpi.software.xsi.command</groupId>
             <artifactId>be.urpi.software.xsi.command.rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>be.urpi.software.xsi.command</groupId>
+            <artifactId>be.urpi.software.xsi.command.model</artifactId>
         </dependency>
         <dependency>
             <groupId>be.urpi.software.xsi.query</groupId>

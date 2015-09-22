@@ -13,8 +13,22 @@
     <artifactId>be.urpi.software.xsi.command.mvn</artifactId>
     <packaging>pom</packaging>
 
-    <modules>
-        <module>command-model</module>
-        <module>command-rest</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>production</id>
+            <modules>
+                <module>command-model</module>
+                <module>command-repository</module>
+                <module>command-rest</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>stub</id>
+            <modules>
+                <module>command-model</module>
+                <module>command-model-stub</module>
+                <module>command-rest</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

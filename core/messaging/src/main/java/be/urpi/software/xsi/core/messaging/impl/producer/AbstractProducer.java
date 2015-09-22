@@ -10,9 +10,6 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.retry.RetryCallback;
-import org.springframework.retry.RetryContext;
 import org.springframework.retry.support.RetryTemplate;
 
 import java.util.Random;
@@ -33,41 +30,34 @@ public class AbstractProducer<MESSAGE extends TaskMessage> implements Producer<M
         final long correlationId = randomSeed.nextLong();
 
         try {
-            retryTemplate.execute(new RetryCallback<MESSAGE, Exception>() {
-                @Override
-                public MESSAGE doWithRetry(final RetryContext retryContext) throws Exception {
-                    final MessageProperties messageProperties = new MessageProperties();
-                    final String id = String.valueOf(correlationId);
-                    object.setTaskMessageId(id);
-                    messageProperties.setCorrelationId(id.getBytes());
-                    messageProperties.setDeliveryTag(correlationId);
-                    messageProperties.setDeliveryMode(PERSISTENT);
-                    messageProperties.setMessageCount(1);
-                    messagingTemplate.send(exchange, routingKey, new Message(objectMapper.writeValueAsBytes(object), messageProperties), new CorrelationData(id));
-                    return null;
-                }
+            retryTemplate.execute(retryContext -> {
+                final MessageProperties messageProperties = new MessageProperties();
+                final String id = String.valueOf(correlationId);
+                object.setTaskMessageId(id);
+                messageProperties.setCorrelationId(id.getBytes());
+                messageProperties.setDeliveryTag(correlationId);
+                messageProperties.setDeliveryMode(PERSISTENT);
+                messageProperties.setMessageCount(1);
+                messagingTemplate.send(exchange, routingKey, new Message(objectMapper.writeValueAsBytes(object), messageProperties), new CorrelationData(id));
+                return null;
             });
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
     }
 
-    @Required
     public void setRetryTemplate(final RetryTemplate retryTemplate) {
         this.retryTemplate = retryTemplate;
     }
 
-    @Required
     public void setMessagingTemplate(final RabbitTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
 
-    @Required
     public void setExchange(final String exchange) {
         this.exchange = exchange;
     }
 
-    @Required
     public void setRoutingKey(final String routingKey) {
         this.routingKey = routingKey;
     }

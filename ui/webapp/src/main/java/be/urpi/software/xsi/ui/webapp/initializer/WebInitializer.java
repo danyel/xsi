@@ -1,6 +1,6 @@
 package be.urpi.software.xsi.ui.webapp.initializer;
 
-import be.urpi.software.xsi.command.config.CommandConfiguration;
+import be.urpi.software.xsi.command.rest.config.CommandRestConfiguration;
 import be.urpi.software.xsi.query.rest.config.QueryRestConfiguration;
 import be.urpi.software.xsi.ui.webapp.config.UiConfiguration;
 import be.urpi.software.xsi.ui.webapp.context.util.ApplicationConfiguration;
@@ -48,7 +48,7 @@ public class WebInitializer implements WebApplicationInitializer {
 
     private void initCommandRestContext(final ServletContext servletContext) {
         final ApplicationConfiguration commandApplicationConfiguration = WebApplicationInitializerConfigurationUtil.buildApplicationConfiguration("Command Rest Controller", "commandRestDispatcher", "/command/*", 3);
-        WebApplicationInitializerConfigurationUtil.onConfig(logger, servletContext, commandApplicationConfiguration, false, CommandConfiguration.class);
+        WebApplicationInitializerConfigurationUtil.onConfig(logger, servletContext, commandApplicationConfiguration, false, CommandRestConfiguration.class);
     }
 
     private void initQueryRestContext(final ServletContext servletContext) {

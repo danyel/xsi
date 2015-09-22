@@ -6,11 +6,8 @@ import be.urpi.software.xsi.command.user.metadata.CreateUser;
 import be.urpi.software.xsi.command.user.repository.UserRepository;
 import be.urpi.software.xsi.core.command.impl.consumer.CommandConsumer;
 
-import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
 
-@Component
 public class CreateUserConsumer extends CommandConsumer<CreateUser, CreateUserMessage> {
     @Resource(name = UserRepository.NAME)
     private UserRepository userRepository;
