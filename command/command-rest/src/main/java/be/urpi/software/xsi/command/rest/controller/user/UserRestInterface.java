@@ -1,4 +1,4 @@
-package be.urpi.software.xsi.command.rest.user;
+package be.urpi.software.xsi.command.rest.controller.user;
 
 import be.urpi.software.xsi.command.user.message.CreateUserMessage;
 import be.urpi.software.xsi.command.user.message.EnableUserMessage;
@@ -8,7 +8,6 @@ import be.urpi.software.xsi.command.user.producer.CreateUserProducer;
 import be.urpi.software.xsi.command.user.producer.EnableUserProducer;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Resource;
 
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
-@Controller
+//@Controller
 @RequestMapping(value = "/user")
 public class UserRestInterface {
     @Resource

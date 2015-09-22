@@ -10,6 +10,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Configuration
 @Import(value = {CommandConfiguration.class})
 @EnableWebMvc
-@ComponentScan(basePackages = {"be.urpi.software.xsi.command.rest"})
+@ComponentScan(basePackages = {"be.urpi.software.xsi.command.rest.controller"})
 public class RestConfiguration {
 }
